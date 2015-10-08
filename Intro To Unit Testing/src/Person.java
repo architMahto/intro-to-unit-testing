@@ -9,9 +9,9 @@ public class Person implements Comparable {
 	}
 	
 	public Person (String firstName, String lastName, int age) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.age = age;
+		setFirstName(firstName);
+		setLastName(lastName);
+		setAge(age);
 	}
 	
 	public String getFirstName() {
@@ -19,6 +19,9 @@ public class Person implements Comparable {
 	}
 	
 	public void setFirstName(String firstName) {
+		if (!validateNameString(firstName))
+			throw new IllegalArgumentException("Name must only contain characters. " + 
+											   "Symbols, numbers, and punctuation are not allowed.");
 		this.firstName = firstName;
 	}
 	
@@ -27,6 +30,9 @@ public class Person implements Comparable {
 	}
 	
 	public void setLastName(String lastName) {
+		if (!validateNameString(lastName))
+			throw new IllegalArgumentException("Name must only contain characters. " + 
+											   "Symbols, numbers, and punctuation are not allowed.");
 		this.lastName = lastName;
 	}
 	
@@ -35,6 +41,8 @@ public class Person implements Comparable {
 	}
 	
 	public void setAge(int age) {
+		if (age < 0)
+			throw new IllegalArgumentException("Age must be greater than or equal to zero");
 		this.age = age;
 	}
 	
@@ -70,6 +78,26 @@ public class Person implements Comparable {
 			// right side is greater
 			return -1;
 		
+		// both have no last name
+		if (thisLastNameNull && objLastNameNull) {
+			if (!thisFirstNameNull && objFirstNameNull)
+				// left has first name set, right does not have anything set
+				return 1;
+			else if (thisFirstNameNull && !objFirstNameNull)
+				// right has first name
+				return -1;
+		}
+		
 		return -99;
 	}
+	
+	private boolean validateNameString(String nameToValidate) {
+		if (nameToValidate != null && !nameToValidate.equals("")) {
+			// regex to validate String
+			String pattern = "[A-Za-z]*";
+			return nameToValidate.matches(pattern);
+		}
+		return true;
+	}
+	
 }

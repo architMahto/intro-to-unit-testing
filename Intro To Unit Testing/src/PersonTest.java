@@ -13,6 +13,7 @@ public class PersonTest {
 	private String lastName = "Kirk";
 	private int age = 50;
 	private Person myPerson;
+	private String invalidName = "12345 ^&*()_+";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -132,5 +133,60 @@ public class PersonTest {
 				, expected1, myPerson.compareTo(p));
         assertEquals("Person with nothing set should be less than person with age set"
 				, expectedm1, p.compareTo(myPerson));
+        
+        //no ln set, first name set on left, no ln, no fn set on right. age irrellevant
+        myPerson.setFirstName(firstName);
+        myPerson.setAge(age);
+        assertEquals("Person with nothing set should be less than person with first name and age set"
+        				, expected1, myPerson.compareTo(p));
+        assertEquals("Person with nothing set should be less than person with first name and age set"
+    					, expectedm1, p.compareTo(myPerson));
+        p.setAge(age);
+        assertEquals("Person with only age set should be less than person with first name and age set"
+				, expected1, myPerson.compareTo(p));
+        assertEquals("Person with only age set should be less than person with first name and age set"
+				, expectedm1, p.compareTo(myPerson));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetInvalidFirstName() {
+		// first, make sure fails if valid input
+		myPerson.setFirstName(firstName);		
+		myPerson.setFirstName(invalidName);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetInvalidFirstNameConstructor() {
+		// first, make sure fails if valid input
+		myPerson = new Person(firstName, lastName, age);		
+		myPerson = new Person(invalidName, lastName, age);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetInvalidLastName() {
+		// first, make sure fails if valid input
+		myPerson.setLastName(lastName);		
+		myPerson.setLastName(invalidName);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetInvalidLastNameConstructor() {
+		// first, make sure fails if valid input
+		myPerson = new Person(firstName, lastName, age);
+		myPerson = new Person(firstName, invalidName, age);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetInvalidAge() {
+		// first, make sure fails if valid input
+		myPerson.setAge(age);		
+		myPerson.setAge(-1);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetInvalidAgeConstructor() {
+		// first, make sure fails if valid input
+		myPerson = new Person(firstName, lastName, age);
+		myPerson = new Person(firstName, lastName, -1);
 	}
 }
