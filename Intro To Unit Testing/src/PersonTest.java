@@ -76,6 +76,7 @@ public class PersonTest {
 		p1.setAge(age);
 		assertEquals("Age was not set as expected", age, p1.getAge());
 	}
+	
 	/*
 	 * Testing toString() method
 	 */
@@ -90,5 +91,46 @@ public class PersonTest {
 		assertTrue("Person toString does not contain firstName", personString.contains(firstName));
 		assertTrue("Person toString does not contain lastName", personString.contains(lastName));
 		assertTrue("Person toString does not contain age", personString.contains(String.format("%d", age)));
+	}
+	
+	/*
+	 * Testing comparable interface
+	 */
+	@Test
+	public void testComparable() {
+		Object o = null;						// null object
+		Object o2 = "This is really a String";	// a String, not a Person
+		Person p = new Person();				// used to compare to myPerson
+		int expected1 = 1;						// expected when myPerson > p
+		int expected0 = 0;						// expected when myPerson == p
+		int expectedm1 = -1;					// expected when myPerson < p
+		
+		// cannot compare against null
+		assertEquals("Null value should be less than our person!", expected1, myPerson.compareTo(o));
+		// cannot compare against non-person
+		assertEquals("Non-person should be less than our person!", expected1, myPerson.compareTo(o2));
+	
+		//last name set on one
+        myPerson.setLastName(lastName);
+        assertEquals("Person with nothing set should be less than person with last name set"
+        				, expected1, myPerson.compareTo(p));
+        assertEquals("Person with nothing set should be less than person with last name set"
+        				, expectedm1, p.compareTo(myPerson));	
+        myPerson.setLastName(null);
+        
+        //first name set on one
+        myPerson.setFirstName(firstName);
+        assertEquals("Person with nothing set should be less than person with first name set"
+				, expected1, myPerson.compareTo(p));
+        assertEquals("Person with nothing set should be less than person with first name set"
+				, expectedm1, p.compareTo(myPerson));	
+        myPerson.setFirstName(null);
+        
+        //age set on one
+        myPerson.setAge(age);
+        assertEquals("Person with nothing set should be less than person with age set"
+				, expected1, myPerson.compareTo(p));
+        assertEquals("Person with nothing set should be less than person with age set"
+				, expectedm1, p.compareTo(myPerson));
 	}
 }
